@@ -28,7 +28,7 @@ vec4 nlWater(
     } else { // slanted plane and highly slanted plane
     }*/
   } else { // reflection for side plane
-    bump *= 0.5 + 0.5*sin(3.0*t*NL_WATER_WAVE_SPEED + cPos.y*NL_CONST_PI_HALF);
+    bump *= 0.5  + 0.5*sin(3.0*t*NL_WATER_WAVE_SPEED + cPos.y*NL_CONST_PI_HALF);
     nrm.xz = normalize(viewDir.xz) + bump.y*(1.0-viewDir.xz*viewDir.xz)*NL_WATER_BUMP;
     nrm.y = bump.x*NL_WATER_BUMP;
   }
@@ -49,26 +49,58 @@ vec4 nlWater(
         waterRefl += aurora.rgb*aurora.a*fade;
       #endif
 
+      #if NL_CLOUD_TYPE == 0
+        vec4 clouds = renderCloudsSimple(skycol, cloudPos.xyy, t, env.rainFactor);
+        waterRefl = mix(waterRefl, clouds.rgb, clouds.a*fade);
+      #endif  
       #if NL_CLOUD_TYPE == 1
         vec4 clouds = renderCloudsSimple(skycol, cloudPos.xyy, t, env.rainFactor);
         waterRefl = mix(waterRefl, clouds.rgb, clouds.a*fade);
-      #endif
+      #endif         
+      
     }
   #endif
 
   // torch light reflection
+           //0.5 0.5
   float tc = 0.5+0.5*sin(16.0*viewDir.x)*sin(16.0*viewDir.z);
   waterRefl += torchColor*NL_TORCH_INTENSITY*lit.x*tc*tc;
 
+
+
+
   // mask sky reflection under shade
   if (!env.end) {
-    waterRefl *= 0.05 + lit.y*1.14;
+                //0.05       1.14
+    waterRefl *= 0.05 + lit.y*1.14;// antes 1.1
   }
+  
 
-  #ifdef NL_WATER_REFL_MASK
-    float mask = 0.05+0.05*sin(viewDir.x*12.0)*sin(viewDir.z*6.0);
-    waterRefl *= smoothstep(mask-0.2,mask+0.13,viewDir.y*viewDir.y);
-  #endif
+
+
+  //#ifdef NL_WATER_REFL_MASK
+//float mask = 0.15 + 0.08 * sin(viewDir.x * 12.0) * sin(viewDir.z * 31.4);
+//waterRefl *= smoothstep(mask - 0.15, mask + 0.08, viewDir.y * viewDir.y);
+//#endif
+
+  //#ifdef NL_WATER_REFL_MASK
+//float mask = 0.05 + 0.04 * sin(viewDir.x * 16.0) * sin(viewDir.z * 13.4);
+//waterRefl *= smoothstep(mask - 0.25, mask + 0.2, viewDir.y * viewDir.y);
+//#endif
+
+
+#ifdef NL_WATER_REFL_MASK
+//           0.05   0.04                   16.0                    13.4
+float mask = 0.05 + 0.08 * sin(viewDir.x * 14.0) * sin(viewDir.z * 7.0);//7.5
+waterRefl *= smoothstep(mask - 0.15, mask + 0.1, viewDir.y * viewDir.y);
+#endif//                       0.25         0.2
+    
+    
+    
+    
+    
+
+
 
   cosR = abs(cosR);
   float fresnel = calculateFresnel(cosR, 0.07);
@@ -78,12 +110,12 @@ vec4 nlWater(
   color.a = mix(COLOR.a*NL_WATER_TRANSPARENCY, 1.0, opacity*opacity);
 
   #ifdef NL_WATER_WAVE
-    if (camDist < 14.0) {
+    if (camDist < 16.0) {
       wPos.y -= 0.5*(bump.x+0.5)*NL_WATER_BUMP;
-    }
+    }  
   #endif
 
-  return vec4(waterRefl, fresnel);
+  return vec4(waterRefl*0.9, fresnel);//vec4(waterRefl, fresnel);
 }
 
 #endif
