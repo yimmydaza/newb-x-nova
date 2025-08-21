@@ -1,3 +1,4 @@
+//NEW
 #ifndef FOG_H
 #define FOG_H
 
