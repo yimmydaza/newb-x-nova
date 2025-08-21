@@ -27,13 +27,13 @@
     },
     "swampland": {
       "water_surface_color": "#4c6559",
-      "water_surface_transparency": 0.45,//94
+      "water_surface_transparency": 0.45, //94
       "fog_identifier": "minecraft:fog_swampland",
       "inherit_from_prior_fog": false
     },
     "swampland_mutated": {
       "water_surface_color": "#4c6156",
-      "water_surface_transparency": 0.45,//94
+      "water_surface_transparency": 0.45, //94
       "fog_identifier": "minecraft:fog_swampland_mutated",
       "inherit_from_prior_fog": false
     },
