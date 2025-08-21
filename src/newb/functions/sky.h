@@ -78,9 +78,9 @@ vec3 renderOverworldSky(nl_skycolor skycol, vec3 viewDir) {
 
   // gradient 1  h^16
   // gradient 2  h^8 mix h^2
-  float gradient1 = hsq*hsq;
+  float gradient1 = hsq*hsq*hsq;
   gradient1 *= gradient1;
-  float gradient2 = 0.6*gradient1 + 0.4*hsq;
+  float gradient2 = 0.3*gradient1 + 0.5*hsq;
   gradient1 *= gradient1;
 
   vec3 sky = mix(skycol.horizon, skycol.horizonEdge, gradient1);
@@ -139,20 +139,34 @@ vec3 nlRenderSky(nl_skycolor skycol, nl_environment env, vec3 viewDir, vec3 FOG_
     #ifdef NL_RAINBOW
       sky += mix(NL_RAINBOW_CLEAR, NL_RAINBOW_RAIN, env.rainFactor)*spectrum((viewDir.z+0.6)*8.0)*max(viewDir.y, 0.0)*FOG_COLOR.g;
     #endif
-    #ifdef NL_UNDERWATER_STREAKS
-      if (env.underwater) {
+    
+    
+    
+   #ifdef NL_UNDERWATER_STREAKS
+     if (env.underwater) {
         float a = atan2(viewDir.x, viewDir.z);
+                   //0.5 + 0.5
         float grad = 0.5 + 0.5*viewDir.y;
         grad *= grad;
-        float spread = (0.5 + 0.5*sin(3.0*a + 0.2*t + 2.0*sin(5.0*a - 0.4*t)));
-        spread *= (0.5 + 0.5*sin(3.0*a - sin(0.5*t)))*grad;
+                      //0.5 + 0.5     3.0     0.2     2.0     5.0     0.4
+        float spread = (0.5 + 0.5*sin(25.0*a + 0.2*t + 2.0*sin(5.0*a - 0.4*t)));
+        
+                 //0.5 + 0.5     3.0         0.5
+        spread *= (0.5 + 0.5*sin(25.0*a - sin(0.5*t)))*grad;
+        
+                 //1.0
         spread += (1.0-spread)*grad;
         float streaks = spread*spread;
         streaks *= streaks;
-        streaks = (spread + 3.0*grad*grad + 4.0*streaks*streaks);
+                          //3.0             4.0
+        streaks = (spread + 6.0*grad*grad + 4.0*streaks*streaks);
+             //2.0
         sky += 2.0*streaks*skycol.horizon;
       } else 
     #endif
+    
+    
+    
     if (!env.nether) {
       sky += getSunBloom(viewDir.x, skycol.horizonEdge, FOG_COLOR);
     }
@@ -160,6 +174,8 @@ vec3 nlRenderSky(nl_skycolor skycol, nl_environment env, vec3 viewDir, vec3 FOG_
 
   return sky;
 }
+
+
 
 // sky reflection on plane
 vec3 getSkyRefl(nl_skycolor skycol, nl_environment env, vec3 viewDir, vec3 FOG_COLOR, float t) {
@@ -170,12 +186,14 @@ vec3 getSkyRefl(nl_skycolor skycol, nl_environment env, vec3 viewDir, vec3 FOG_C
     specular *= specular*viewDir.x;
     specular *= specular;
     specular += specular*specular*specular*specular;
-    specular *= max(FOG_COLOR.r-FOG_COLOR.b, 0.0);
+    specular *= 2.5* max(FOG_COLOR.r-FOG_COLOR.b, 0.0);
     refl += 5.0 * skycol.horizonEdge * specular * specular;
   }
 
   return refl;
 }
+
+
 
 // shooting star
 vec3 nlRenderShootingStar(vec3 viewDir, vec3 FOG_COLOR, float t) {
