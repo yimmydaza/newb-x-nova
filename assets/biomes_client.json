@@ -1,13 +1,56 @@
 {
   "biomes": {
     "default": {
-      "water_surface_transparency": 0.65
+      "water_surface_color": "#3bbbff",
+      "water_surface_transparency": 0.65,
+      "fog_identifier": "minecraft:fog_default",
+      "remove_all_prior_fog": false,
+      "inherit_from_prior_fog": false
+    },
+    "plains": {
+      "water_surface_color": "#3bbbff",
+      "water_surface_transparency": 0.95,
+      "fog_identifier": "minecraft:fog_plains",
+      "inherit_from_prior_fog": false
+    },
+    "desert": {
+      "water_surface_color": "#2dffc1",
+      "water_surface_transparency": 0.65,
+      "fog_identifier": "minecraft:fog_desert",
+      "inherit_from_prior_fog": false
+    },
+    "beach": {
+      "water_surface_color": "#22ebff",
+      "water_surface_transparency": 0.65,
+      "fog_identifier": "minecraft:fog_beach",
+      "inherit_from_prior_fog": false
     },
     "swampland": {
-      "water_surface_transparency": 0.94
+      "water_surface_color": "#4c6559",
+      "water_surface_transparency": 0.45,//94
+      "fog_identifier": "minecraft:fog_swampland",
+      "inherit_from_prior_fog": false
     },
     "swampland_mutated": {
-      "water_surface_transparency": 0.94
+      "water_surface_color": "#4c6156",
+      "water_surface_transparency": 0.45,//94
+      "fog_identifier": "minecraft:fog_swampland_mutated",
+      "inherit_from_prior_fog": false
+    },
+    "deep_cold_ocean": {
+      "water_surface_color": "#1479cc",
+      "fog_identifier": "minecraft:fog_deep_cold_ocean",
+      "inherit_from_prior_fog": false
+    },
+    "deep_frozen_ocean": {
+      "water_surface_color": "#3759b1",
+      "fog_identifier": "minecraft:fog_deep_frozen_ocean",
+      "inherit_from_prior_fog": false
+    },
+    "frozen_ocean": {
+      "water_surface_color": "#3d7ae4",
+      "fog_identifier": "minecraft:fog_frozen_ocean",
+      "inherit_from_prior_fog": false
     },
     "the_end": {
       "fog_identifier": "newb:fog_the_end"
