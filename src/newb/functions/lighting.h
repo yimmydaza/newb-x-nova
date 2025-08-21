@@ -93,12 +93,17 @@ vec3 nlLighting(
     light += torchLight*(1.0-(max(shadow, 0.65*lit.y)*dayFactor*(1.0-0.3*env.rainFactor)));
   }
 
-  // darken at crevices
-  light *= COLOR.g > 0.35 ? 1.0 : 0.8;
+           //darken at crevices
+     float col_max = max(COLOR.r, max(COLOR.g, COLOR.b));
+     if (col_max < 0.7) {
+     light *= 0.65;    //adjust this number (max 0.7)
+     }//      0.65
+                   //0.35   1.0   0.8
+ //light *= COLOR.g > 0.35 ? 1.0 : 0.8;
 
   // brighten tree leaves
   if (isTree) {
-    light *= 1.25;
+    light *= 1.35;//1.25
   }
 
   return light;
